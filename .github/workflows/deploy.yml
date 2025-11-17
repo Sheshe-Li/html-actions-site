@@ -1,0 +1,76 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Allow manual triggers
+
+# Set permissions for deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # Build job - validates the site structure
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Validate HTML structure
+        run: |
+          echo "📁 Validating website structure..."
+          echo "Files in repository:"
+          ls -la
+          echo "---"
+          echo "Checking required files exist..."
+          [ -f "index.html" ] && echo "✅ index.html found" || echo "❌ index.html missing"
+          [ -f "about.html" ] && echo "✅ about.html found" || echo "❌ about.html missing"
+          [ -f "contact.html" ] && echo "✅ contact.html found" || echo "❌ contact.html missing"
+          [ -f "style.css" ] && echo "✅ style.css found" || echo "❌ style.css missing"
+          [ -f "script.js" ] && echo "✅ script.js found" || echo "❌ script.js missing"
+          echo "---"
+          echo "📊 File sizes:"
+          find . -name "*.html" -o -name "*.css" -o -name "*.js" | xargs ls -lh
+
+      - name: Create simple upload artifact
+        run: |
+          echo "🚀 Preparing files for deployment..."
+          # Create a timestamp file to show build info
+          echo "Build date: $(date)" > build-info.txt
+          echo "Commit: ${{ github.sha }}" >> build-info.txt
+          echo "Repository: ${{ github.repository }}" >> build-info.txt
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    runs-on: ubuntu-latest
+    needs: build
+    
+    # Only deploy on push to main/master (not on PRs)
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
