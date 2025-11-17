@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - HTML Actions Site</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="nav-logo">HTML Site</h1>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link active">Home</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Welcome to my 1st Github website</h1>
+            <p>This is a static HTML site deployed with GitHub Actions</p>
+            <button class="cta-button" onclick="showWelcome()">Click Me!</button>
+        </section>
+        
+        <section class="features">
+            <div class="feature-card">
+                <h3>Fast Deployment</h3>
+                <p>Automatically deployed with GitHub Actions on every push</p>
+            </div>
+            <div class="feature-card">
+                <h3>Responsive Design</h3>
+                <p>Works on all devices and screen sizes</p>
+            </div>
+            <div class="feature-card">
+                <h3>No Build Step</h3>
+                <p>Pure HTML, CSS, and JavaScript - no frameworks needed</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 HTML Actions Site. Built with GitHub Pages.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
